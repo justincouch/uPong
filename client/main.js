@@ -92,6 +92,7 @@ Template.game.rendered = function gameRendered() {
     { 
       isStatic: true,
       isSensor: true,
+      friction: 0,
       render: {
         strokeStyle: redColor,
         fillStyle: redColor,
@@ -108,6 +109,7 @@ Template.game.rendered = function gameRendered() {
     { 
       isStatic: true,
       isSensor: true,
+      friction: 0,
       render: {
         strokeStyle: blueColor,
         fillStyle: blueColor,
@@ -125,7 +127,7 @@ Template.game.rendered = function gameRendered() {
       Common.random(50, render.options.height-50),
       Common.random(10, 50),
       Common.random() > 0.9 ? Common.random(15, 25) : Common.random(5, 10),
-      { restitution: 1, frictionAir: 0.0 }
+      { restitution: 1, friction: 0, frictionAir: 0.0 }
     );
 
     Body.setVelocity( body, {x:getRandomArbitrary(-10,10), y:getRandomArbitrary(-2,2)} );
@@ -142,6 +144,7 @@ Template.game.rendered = function gameRendered() {
         render:{fillStyle:redColor},
         //isStatic: true,
         restitution: 1.2,
+        friction: 0,
         frictionAir: 0.1
       }
     );
@@ -155,6 +158,7 @@ Template.game.rendered = function gameRendered() {
         render:{fillStyle:blueColor},
         //isStatic: true,
         restitution: 1.2,
+        friction: 0,
         frictionAir: 0.1
       }
     );
@@ -313,18 +317,18 @@ Events.on(engine, 'afterUpdate', function() {
 window.addEventListener('devicemotion', function(event) {
   console.log(window.location.pathname);
   if ( window.location.pathname === "/red" ){
+    var obj = UI_DB.findOne( {"name":"redPlayer"} );
     if ( Math.abs(event.acceleration.z - obj.accz) > 1 ){
       $("#accz").html(Math.round(event.acceleration.z));
-      var obj = UI_DB.findOne( {"name":"redPlayer"} );
       obj.accz = event.acceleration.z;
       Meteor.call('ui_db.update',obj);
     }
     
   }
   else if ( window.location.pathname === "/blue" ){
+    var obj = UI_DB.findOne( {"name":"bluePlayer"} );
     if ( Math.abs(event.acceleration.z - obj.accz) > 1 ){
       $("#accz").html(Math.round(event.acceleration.z));
-      var obj = UI_DB.findOne( {"name":"bluePlayer"} );
       obj.accz = event.acceleration.z;
       Meteor.call('ui_db.update',obj);
     }
