@@ -313,16 +313,21 @@ Events.on(engine, 'afterUpdate', function() {
 window.addEventListener('devicemotion', function(event) {
   console.log(window.location.pathname);
   if ( window.location.pathname === "/red" ){
-    $("#accz").html(Math.round(event.acceleration.z));
-    var obj = UI_DB.findOne( {"name":"redPlayer"} );
-    obj.accz = event.acceleration.z;
-    Meteor.call('ui_db.update',obj);
+    if ( Math.abs(event.acceleration.z - obj.accz) > 1 ){
+      $("#accz").html(Math.round(event.acceleration.z));
+      var obj = UI_DB.findOne( {"name":"redPlayer"} );
+      obj.accz = event.acceleration.z;
+      Meteor.call('ui_db.update',obj);
+    }
+    
   }
   else if ( window.location.pathname === "/blue" ){
-    $("#accz").html(Math.round(event.acceleration.z));
-    var obj = UI_DB.findOne( {"name":"bluePlayer"} );
-    obj.accz = event.acceleration.z;
-    Meteor.call('ui_db.update',obj);
+    if ( Math.abs(event.acceleration.z - obj.accz) > 1 ){
+      $("#accz").html(Math.round(event.acceleration.z));
+      var obj = UI_DB.findOne( {"name":"bluePlayer"} );
+      obj.accz = event.acceleration.z;
+      Meteor.call('ui_db.update',obj);
+    }
   }
   
 });
