@@ -410,7 +410,7 @@ Template.game.helpers({
     var obj = UI_DB.findOne( {"name":"redPlayer"} );
     if ( obj != undefined ){
       var z = obj.accz;
-      z /= 100;
+      z /= 10;
       z = Math.min(Math.max(z, -2), 2);
       if ( Math.abs(obj.accz) > 1 ){
         Body.applyForce(REDPADDLE,
@@ -427,7 +427,7 @@ Template.game.helpers({
     obj = UI_DB.findOne( {"name":"bluePlayer"} );
     if ( obj != undefined ){
       z = obj.accz;
-      z /= 100;
+      z /= 10;
       z = Math.min(Math.max(z, -2), 2);
       if ( Math.abs(obj.accz) > 1 ){
         Body.applyForce(BLUEPADDLE,
