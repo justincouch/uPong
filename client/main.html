@@ -1,0 +1,139 @@
+<head>
+  <title>Video Wall Pong</title>
+  <script type="text/javascript" src="/libs/matter.js"></script>
+</head>
+
+<!-- <body>
+  {{> game}}
+</body> -->
+
+<template name="game">
+  <div id="game-container" class="game-container"></div>
+  <div id="score-container" class="score-container container">
+    <div class="row">
+      <div class="col-md-1 col-md-offset-5 score">
+        <div class="col-md-12 scoreBox redScore">
+          100
+        </div>
+      </div>
+      <div class="col-md-1 score">
+        <div class="col-md-12 scoreBox blueScore">
+          100
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div id="acc-container" class="acc-container">
+    <span id="accx"></span><br/>
+    <span id="accy"></span><br/>
+    <span id="accz"></span><br/>
+  </div>
+  <div id="ori-container" class="ori-container">
+    1 - 0
+  </div> -->
+
+  {{paddleHelper}}
+  {{scoreHelper}}
+  {{triggerHelper}}
+</template>
+
+
+<template name="iPhoneHeader">
+  <head>
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" />
+  </head>
+</template>
+
+
+<template name="welcome">
+  {{> iPhoneHeader}}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 text-center">
+        <span id="welcome_span">Welcome to</span><br/>
+        <span id="upong_span">U Pong!</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 text-center">
+        <span id="wanttoplay_span">Want to Play?</span>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="col-xs-6 navBtnOuter">
+        <div class="navBtn red" id="redTeam">RED</div>
+      </div>
+      <div class="col-xs-6 navBtnOuter">
+        <div class="navBtn blue" id="blueTeam">BLUE</div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="col-xs-6 navBtnOuter">
+        <div class="navBtn" id="addaball">ADD A BALL!</div>
+      </div>
+      <div class="col-xs-6 navBtnOuter">
+        <div class="navBtn" id="shakescene">SHAKE IT UP!</div>
+      </div>
+    </div>
+
+    <hr />
+
+  </div>
+</template>
+
+
+<template name="red">
+  <div class="color-container red">
+    <div id="acc-container" class="acc-container">
+      <span id="accz"></span><br/>
+    </div>
+  </div>
+</template>
+
+<template name="blue">
+  <div class="color-container blue">
+    <div id="acc-container" class="acc-container">
+      <span id="accz"></span><br/>
+    </div>
+  </div>
+</template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<template name="hello">
+  <button>Click Me</button>
+  <p>You've pressed the button {{counter}} times.</p>
+</template>
+
+<template name="info">
+  <h2>Learn Meteor!</h2>
+  <ul>
+    <li><a href="https://www.meteor.com/try" target="_blank">Do the Tutorial</a></li>
+    <li><a href="http://guide.meteor.com" target="_blank">Follow the Guide</a></li>
+    <li><a href="https://docs.meteor.com" target="_blank">Read the Docs</a></li>
+    <li><a href="https://forums.meteor.com" target="_blank">Discussions</a></li>
+  </ul>
+</template>
