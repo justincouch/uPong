@@ -65,7 +65,8 @@ Template.game.rendered = function gameRendered() {
           width: document.documentElement.clientWidth,
           height: document.documentElement.clientHeight,
           showVelocity: true,
-          wireframes: false
+          wireframes: false,
+          background: "transparent"
       }
   });
 
@@ -78,8 +79,8 @@ Template.game.rendered = function gameRendered() {
 
   World.add(world, [
       // walls
-      Bodies.rectangle(0, -10, render.options.width*2, 10, { isStatic: true, restitution: 1 }),
-      Bodies.rectangle(0, render.options.height+5, render.options.width*2, 10, { isStatic: true, restitution: 1 }),
+      Bodies.rectangle(0, -10, render.options.width*2, 10, { isStatic: true, restitution: 1, friction: 0, frictionAir: 0 }),
+      Bodies.rectangle(0, render.options.height+5, render.options.width*2, 10, { isStatic: true, restitution: 1, friction: 0, frictionAir: 0 }),
       //Bodies.rectangle(render.options.width+10, 0, 10, render.options.height*2, { isStatic: true }),
       //Bodies.rectangle(-10, 0, 10, render.options.height*2, { isStatic: true })
   ]);
@@ -126,11 +127,18 @@ Template.game.rendered = function gameRendered() {
       Common.random(50, render.options.width-50), 
       Common.random(50, render.options.height-50),
       Common.random(10, 50),
-      Common.random() > 0.9 ? Common.random(15, 25) : Common.random(5, 10),
-      { restitution: 1, friction: 0, frictionAir: 0.0 }
+      Common.random(3, 10),
+      { 
+        restitution: 1, 
+        friction: 0, 
+        frictionAir: 0.0,
+        render: {
+          fillStyle: "#000000"
+        } 
+      }
     );
 
-    Body.setVelocity( body, {x:getRandomArbitrary(-10,10), y:getRandomArbitrary(-2,2)} );
+    Body.setVelocity( body, {x:getRandomArbitrary(-20,20), y:getRandomArbitrary(-2,2)} );
 
     World.add(world, body);
   }
@@ -213,7 +221,12 @@ function addARandomBall(){
     Common.random(50, render.options.height-50),
     Common.random(10, 50),
     Common.random() > 0.9 ? Common.random(15, 25) : Common.random(5, 10),
-    { restitution: 1, frictionAir: 0.0 }
+    { restitution: 1, 
+      frictionAir: 0.0,
+      render: {
+        fillStyle: "#000000"
+      }
+    }
   );
 
   Body.setVelocity( body, {x:getRandomArbitrary(-10,10), y:getRandomArbitrary(-2,2)} );
@@ -314,29 +327,58 @@ Events.on(engine, 'afterUpdate', function() {
 });
 
 
+var LAST_RED_TIME = 0;
+var LAST_BLUE_TIME = 0;
+var MOVE_DELAY = 500;
+var nownow = 0;
+var currentAcc = 0;
+var lastAcc = 0;
+var vel = 0;
+
 window.addEventListener('devicemotion', function(event) {
-  console.log(window.location.pathname);
+  //console.log(window.location.pathname);
+  nownow = Date.now();
+  //$("#ori-container").html(nownow);
   if ( window.location.pathname === "/red" ){
     var obj = UI_DB.findOne( {"name":"redPlayer"} );
-    if ( Math.abs(event.acceleration.z - obj.accz) > 1 ){
-      $("#accz").html(Math.round(event.acceleration.z));
-      obj.accz = event.acceleration.z;
+    //var acc = Math.max( Math.abs(event.acceleration.x), Math.abs(event.acceleration.y), Math.abs(event.acceleration.z) );
+    currentAcc = event.acceleration.z;
+    vel += Math.round(event.acceleration.z+0.2);
+    // if ( )
+    var accr = event.acceleration.z;
+    if ( (Math.abs(accr) > 3) && (nownow-LAST_RED_TIME>MOVE_DELAY) ){
+      LAST_RED_TIME = nownow;
+      $("#accz").html(Math.round(accr));
+      obj.accz = accr;
       Meteor.call('ui_db.update',obj);
     }
     
+    $("#vel-container").html(vel);
+    $("#ori-container").html(currentAcc);
+    lastAcc = currentAcc;
   }
   else if ( window.location.pathname === "/blue" ){
     var obj = UI_DB.findOne( {"name":"bluePlayer"} );
-    if ( Math.abs(event.acceleration.z - obj.accz) > 1 ){
-      $("#accz").html(Math.round(event.acceleration.z));
-      obj.accz = event.acceleration.z;
+    var accb = event.acceleration.z;
+    if ( (Math.abs(accb) > 3) && (nownow-LAST_BLUE_TIME>MOVE_DELAY) ){
+      LAST_BLUE_TIME = nownow;
+      $("#accz").html(Math.round(accb));
+      obj.accz = accb;
       Meteor.call('ui_db.update',obj);
     }
   }
   
 });
 
-window.addEventListener("deviceorientation", handleOrientation, true);
+window.addEventListener('deviceorientation', function(event){
+  var absolute = event.absolute;
+  var alpha    = event.alpha;
+  var beta     = event.beta;
+  var gamma    = event.gamma;
+
+  // Do stuff with the new orientation data
+  $("#ori-container").html(absolute, alpha, beta, gamma);
+});
 
 
 function handleOrientation(event) {
@@ -420,6 +462,8 @@ Template.game.helpers({
             y:z
           }
         );
+        obj.accz = 0;
+        Meteor.call('ui_db.update',obj);
       }
     }
     
@@ -437,6 +481,8 @@ Template.game.helpers({
             y:z
           }
         );
+        obj.accz = 0;
+        Meteor.call('ui_db.update',obj);
       }
     }
   }
